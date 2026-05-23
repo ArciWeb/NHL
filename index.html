@@ -98,6 +98,8 @@
 
     <main>
         <h2 class="section-title">Hlavná Tabuľka (Základná Skupina)</h2>
+        <div id="orban-trophy-container" style="background: var(--card-bg); padding: 12px 15px; border-radius: 8px; border-left: 4px solid #eab308; margin-bottom: 15px; font-weight: bold; display: none; box-shadow: 0 2px 4px rgba(0,0,0,0.05);"></div>
+        
         <table>
             <thead>
                 <tr>
@@ -121,13 +123,11 @@
     </main>
 </div>
 
-<!-- Modál Zápasu -->
 <div class="modal" id="match-modal">
     <div class="modal-content">
         <span class="close-btn" onclick="closeModal('match-modal')"><i class="fa-solid fa-times"></i></span>
         <h2 class="modal-title" id="modal-match-title">Zápas</h2>
         
-        <!-- Sekcia klasických gólov a predĺženia -->
         <div id="regular-goals-section" class="match-edit-container">
             <div class="team-column">
                 <div class="team-name" id="modal-t1-name">Tím 1</div>
@@ -141,7 +141,6 @@
             </div>
         </div>
 
-        <!-- Sekcia pre samostatné nájazdy (skrytá na začiatku) -->
         <div id="shootout-section">
             <h3 style="color: var(--primary); margin-top:0;">Rozhodujúci samostatný nájazd</h3>
             <p>Zápas sa nerozhodol ani v predĺžení. Kto vyhral na nájazdy?</p>
@@ -156,14 +155,14 @@
     </div>
 </div>
 
-<!-- Ostatné modály (bez zmeny) -->
 <div class="modal" id="stats-modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('stats-modal')"><i class="fa-solid fa-times"></i></span><h2 class="modal-title" id="stats-title">Štatistiky</h2><div id="stats-content"></div></div></div>
-<div class="modal" id="settings-modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('settings-modal')"><i class="fa-solid fa-times"></i></span><h2 class="modal-title">⚙️ Nastavenia</h2><div class="settings-grid"><div class="settings-box"><h3>Názvy Tímov</h3><input type="text" id="team-0"><input type="text" id="team-1"><input type="text" id="team-2"><input type="text" id="team-3"><button class="btn-action" onclick="updateTeams()"><i class="fa-solid fa-check"></i> Aktualizovať názvy</button></div><div class="settings-box"><h3>Vzhľad (Téma)</h3><select id="theme-selector" onchange="changeTheme()"><option value="default">Základná (Modro-biela)</option><option value="theme-dark-ice">Dark Ice (Tmavá)</option><option value="theme-red-line">Red Line (Červeno-biela)</option><option value="theme-gold">Gold Medal (Zlatá)</option><option value="theme-retro">Retro Hockey</option></select><h3 style="margin-top: 15px;">Dáta a Pamäť</h3><input type="text" id="save-name" placeholder="Názov uloženia"><button class="btn-save" style="margin-top:0;" onclick="saveCustomGame()"><i class="fa-solid fa-save"></i> Uložiť ako novú hru</button><select id="load-selector" style="margin-top:10px;"></select><button class="btn-action" style="margin-top:0;" onclick="loadCustomGame()"><i class="fa-solid fa-folder-open"></i> Načítať hru</button><button class="btn-danger" style="margin-top:15px;" onclick="resetGame()"><i class="fa-solid fa-trash"></i> Vymazať aktuálnu tabuľku</button></div></div></div></div>
+<div class="modal" id="settings-modal"><div class="modal-content"><span class="close-btn" onclick="closeModal('settings-modal')"><i class="fa-solid fa-times"></i></span><h2 class="modal-title">⚙️ Nastavenia</h2><div class="settings-grid"><div class="settings-box"><h3>Názvy Tímov</h3><input type="text" id="team-0"><input type="text" id="team-1"><input type="text" id="team-2"><input type="text" id="team-3"><button class="btn-action" onclick="updateTeams()"><i class="fa-solid fa-check"></i> Aktualizovať názvy</button></div><div class="settings-box"><h3>Vzhľad (Téma)</h3><select id="theme-selector" onchange="changeTheme()"><option value="default">Základná (Modro-biela)</option><option value="theme-dark-ice">Dark Ice (Tmavá)</option><option value="theme-red-line">Red Line (Červeno-biela)</option><option value="theme-gold">Gold Medal (Zlatá)</option><option value="theme-retro">Retro Hockey</option></select><h3 style="margin-top: 15px;">Dáta a Pamäť</h3><input type="text" id="save-name" placeholder="Názov uloženia"><button class="btn-save" style="margin-top:0;" onclick="saveCustomGame()"><i class="fa-solid fa-save"></i> Uložiť ako novú hru</button><select id="load-selector" style="margin-top:10px;"></select><button class="btn-action" style="margin-top:0;" onclick="loadCustomGame()"><i class="fa-solid fa-folder-open"></i> Načítať hru</button>
+<hr style="border: 0; border-top: 1px solid var(--border); margin: 15px 0;"><h3>Export / Import (JSON súbor)</h3><button class="btn-action" style="margin-top:0; background-color: #2563eb;" onclick="exportDoJson()"><i class="fa-solid fa-download"></i> Stiahnuť save (JSON)</button><input type="file" id="json-file-input" accept=".json" style="display:none;" onchange="importZJson(event)"><button class="btn-action" style="margin-top:10px; background-color: #059669;" onclick="document.getElementById('json-file-input').click()"><i class="fa-solid fa-upload"></i> Vložiť save (JSON)</button>
+<button class="btn-danger" style="margin-top:15px;" onclick="resetGame()"><i class="fa-solid fa-trash"></i> Vymazať aktuálnu tabuľku</button></div></div></div></div>
 
 <script>
     // 1. DÁTA A ŠTRUKTÚRA
     const DEFAULT_TEAMS = ['Slovensko', 'Rusko', 'Kanada', 'Česko'];
-    // Pridaný atribút winType (reg = riadny hrací čas, ot = po predĺžení, so = po nájazdoch)
     const DEFAULT_MATCHES = [
         { id: 1, t1: 0, t2: 1, played: false, s1: 0, s2: 0, g1: [], g2: [], winType: 'reg' },
         { id: 2, t1: 0, t2: 2, played: false, s1: 0, s2: 0, g1: [], g2: [], winType: 'reg' },
@@ -183,14 +182,13 @@
     
     let currentEditMatchId = null; 
     let currentEditMatchType = 'group'; 
-    let currentEditPhase = 'reg'; // 'reg', 'ot', 'so' - Sledovanie fázy vypĺňania
+    let currentEditPhase = 'reg'; 
     let derivedPlayoffTeams = {};
 
     function init() {
         const savedData = localStorage.getItem('hockey_autosave_v1_3');
         if (savedData) {
             state = Object.assign(state, JSON.parse(savedData));
-            // Backwards compatibility
             if(!state.playoffs) state.playoffs = JSON.parse(JSON.stringify(DEFAULT_PLAYOFFS));
             state.matches.forEach(m => { if(!m.winType) m.winType = 'reg'; });
         }
@@ -216,7 +214,6 @@
                 if (m.winType === 'ot' || m.winType === 'so') { standings[m.t2].otw++; standings[m.t1].otl++; standings[m.t2].pts += 2; standings[m.t1].pts += 1; } 
                 else { standings[m.t2].w++; standings[m.t1].l++; standings[m.t2].pts += 3; }
             } else {
-                // Staré dáta (remíza)
                 standings[m.t1].otl++; standings[m.t2].otl++; standings[m.t1].pts += 1; standings[m.t2].pts += 1;
             }
         });
@@ -255,6 +252,7 @@
     function renderApp() {
         const standings = calculateStandings();
         renderStandingsTable(standings);
+        renderOrbanTrophy(standings); // Pridané vyhodnocovanie komentára trofeje
         renderMatches();
         renderPlayoffs(evaluatePlayoffs(standings));
     }
@@ -334,7 +332,6 @@
             t1Name = info.t1Name; t2Name = info.t2Name;
         }
 
-        // Reset UI do základného stavu
         document.getElementById('modal-match-title').innerText = `${t1Name} vs ${t2Name}`;
         document.getElementById('modal-t1-name').innerText = t1Name; document.getElementById('modal-t2-name').innerText = t2Name;
         document.getElementById('so-t1-name').innerText = t1Name; document.getElementById('so-t2-name').innerText = t2Name;
@@ -343,7 +340,6 @@
         document.getElementById('shootout-section').style.display = 'none';
         document.getElementById('btn-save-match').innerHTML = '<i class="fa-solid fa-save"></i> Uložiť skóre a zadať strely';
         
-        // Vyčistenie polí nájazdov pre istotu
         document.getElementById('so-scorer').value = '';
         let radios = document.getElementsByName('so-winner'); for(let r of radios) r.checked = false;
 
@@ -379,26 +375,23 @@
         const m = getActiveMatchRef(); tNum === 1 ? m.g1[idx][field] = val : m.g2[idx][field] = val; saveAutoState();
     }
 
-    // HLAVNÁ LOGIKA PREDĹŽENIA A NÁJAZDOV
     function processMatchSave() {
         const m = getActiveMatchRef();
         let g1Count = m.g1.length; let g2Count = m.g2.length;
 
         if (currentEditPhase === 'reg') {
             if (g1Count === g2Count) {
-                // Spustí sa sprievodca predĺžením
                 currentEditPhase = 'ot';
                 document.getElementById('modal-match-title').innerText += ' (PREDĹŽENIE)';
                 document.getElementById('btn-save-match').innerHTML = 'Potvrdiť predĺženie';
                 alert('Zápas skončil remízou! Ak padol gól v predĺžení, pridajte ho. Ak skóre ostalo nezmenené, kliknite znova na "Potvrdiť predĺženie" pre prechod na samostatné nájazdy.');
-                return; // Prerušíme ukladanie
+                return;
             } else {
                 if(!m.played) m.winType = 'reg';
                 promptShotsAndClose(m);
             }
         } else if (currentEditPhase === 'ot') {
             if (g1Count === g2Count) {
-                // Spustí sa sprievodca nájazdmi
                 currentEditPhase = 'so';
                 document.getElementById('modal-match-title').innerText = document.getElementById('modal-match-title').innerText.replace('PREDĹŽENIE', 'NÁJAZDY');
                 document.getElementById('regular-goals-section').style.display = 'none';
@@ -414,7 +407,6 @@
             let scorerName = document.getElementById('so-scorer').value.trim();
             if (!winnerRadio || !scorerName) { alert('Musíte vybrať víťazný tím a zadať meno strelca nájazdu!'); return; }
             
-            // Pridanie gólu pre nájazdy (bez asistencií)
             if (winnerRadio.value === '1') m.g1.push({ scorer: scorerName, a1: '', a2: '' });
             else m.g2.push({ scorer: scorerName, a1: '', a2: '' });
             
@@ -438,7 +430,7 @@
 
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-    // 5. ŠTATISTIKY & NASTAVENIA (Ostatné funkcie z v1.2)
+    // 5. ŠTATISTIKY & NASTAVENIA
     function extractStatsFromMatches(mList, getTeamNameFn) {
         let players = {}; let goalies = state.teams.map(name => ({ name, sa: 0, ga: 0, savePct: 0 }));
         const addStat = (n, t, type) => {
@@ -499,6 +491,67 @@
     function refreshLoadOptions() { const sel = document.getElementById('load-selector'); sel.innerHTML = '<option value="">-- Vyber hru --</option>'; for(let i=0; i<localStorage.length; i++) { let k = localStorage.key(i); if(k.startsWith('hockey_save_')) sel.innerHTML += `<option value="${k}">${k.replace('hockey_save_', '')}</option>`; } }
     function loadCustomGame() { const k = document.getElementById('load-selector').value; if(!k) return; state = JSON.parse(localStorage.getItem(k)); applyTheme(state.theme); saveAutoState(); renderApp(); closeModal('settings-modal'); alert('Načítané.'); }
     function resetGame() { if(confirm('Naozaj vymazať?')) { state.matches = JSON.parse(JSON.stringify(DEFAULT_MATCHES)); state.playoffs = JSON.parse(JSON.stringify(DEFAULT_PLAYOFFS)); saveAutoState(); renderApp(); closeModal('settings-modal'); } }
+
+    // NOVÉ FUNKCIE PRE TROFEJ A JSON EXPORT/IMPORT
+
+    function renderOrbanTrophy(standings) {
+        const container = document.getElementById('orban-trophy-container');
+        if (!container) return;
+        
+        const groupDone = state.matches.every(m => m.played);
+        if (standings.length > 0) {
+            if (groupDone) {
+                container.innerHTML = `🏆 <strong>Trofej Viktora Orbána:</strong> Víťazom základnej časti sa oficiálne stáva tím <strong>${standings[0].name}</strong>!`;
+                container.style.color = "#b45309";
+            } else {
+                container.innerHTML = `⏳ <strong>Trofej Viktora Orbána (priebežne):</strong> Na čele základnej časti je momentálne <strong>${standings[0].name}</strong>. Trofej získa najlepší tím po odohratí celej základnej časti.`;
+                container.style.color = "var(--text)";
+            }
+            container.style.display = 'block';
+        } else {
+            container.style.display = 'none';
+        }
+    }
+
+    function exportDoJson() {
+        const dataStr = JSON.stringify(state, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const saveName = document.getElementById('save-name').value.trim() || 'hokej_turnaj_save';
+        a.download = `${saveName}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
+    function importZJson(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const importedState = JSON.parse(e.target.result);
+                // Základná validácia štruktúry objektu
+                if (importedState && importedState.teams && importedState.matches) {
+                    state = importedState;
+                    applyTheme(state.theme);
+                    saveAutoState();
+                    renderApp();
+                    closeModal('settings-modal');
+                    alert('Save bol úspešne načítaný zo súboru JSON!');
+                } else {
+                    alert('Chyba: Súbor nemá správnu štruktúru turnajových dát.');
+                }
+            } catch (error) {
+                alert('Chyba pri čítaní súboru. Uistite sa, že ide o platný JSON súbor.');
+            }
+        };
+        reader.readAsText(file);
+        event.target.value = ''; // Reset inputu
+    }
 
     window.onload = init;
 </script>
